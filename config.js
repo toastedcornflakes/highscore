@@ -1,3 +1,5 @@
+'use strict';
+
 var config = {};
 
 config.allowed_game_names = ['pokemon' , 'zelda'];

@@ -2,7 +2,7 @@
 
 var http = require('http');
 var model = require('./model.js');
-var config = require('./config');
+var config = require('./config.js');
 
 
 function router(req, res) {

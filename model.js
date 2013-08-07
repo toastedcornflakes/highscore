@@ -1,6 +1,7 @@
 'use strict';
 
-var config = require('./config');
+var config = require('./config.js');
+var fileCache = require('./model/filecache.js')
 var redis = require('redis');
 var redisClient = redis.createClient();
 
@@ -56,21 +57,24 @@ function PUT_handler(req, res) {
   
   // set latest, get best saved and replace it by new score if it's is better
   // using redis eval and lua magic to make atomic operations
-  var lua_redis_update_script = "local best_saved = redis.call('get', KEYS[1]);" + // get the current best
-  "if not best_saved or best_saved < ARGV[1]" + // save new only if better
-  "then redis.call('set', KEYS[1], ARGV[1]) end;" +
-  "redis.call('set', KEYS[2], ARGV[1])"; // set latest anyway
-  
-  // args of eval(): [script, number of keys, key1, key2, arg to script]
-  redisClient.eval([lua_redis_update_script, 2, key_prefix + BEST, key_prefix + LATEST, score], 
-  function (err) {
+  fileCache.readFile('lua/put_new_highscore.lua', function(err, file){
     if(err) {
-      console.log('Redis error: ' + err);
-      res.writeHead(500);
-    } else {
-      res.writeHead(201);
+      console.log('Required file not found, aborting...');
+      console.log(__dirname + 'model/redis_put.lua');
+      process.exit(-1);
     }
-    res.end();
+    var lua_redis_update_script = file;
+    // args of eval(): [script, number of keys, key1, key2..., arg to script]
+    redisClient.eval([lua_redis_update_script, 2, key_prefix + BEST, key_prefix + LATEST, score], 
+    function (err) {
+      if(err) {
+        console.log('Redis error: ' + err);
+        res.writeHead(500);
+      } else {
+        res.writeHead(201);
+      }
+      res.end();
+    });
   });
 }
 
