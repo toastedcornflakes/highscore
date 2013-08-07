@@ -1,1 +1,13 @@
 A RESTful highscore server
+
+Example request to get the best score of player bob who is playing pokemon
+    GET /pokemon/bob/best
+
+Get the latest score of bob:
+    GET /pokemon/bob/latest
+
+Get the 5 best score ever
+    GET /pokemon/worldwide/5
+
+Set a new score (of 1337 points) of bob playing pokemon
+    PUT /pokemon/bob/1337
