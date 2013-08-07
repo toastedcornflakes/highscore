@@ -16,4 +16,4 @@ function readFile(path, callback) {
   }
 }
 
-module.exports.getFile = getFile;
+module.exports.readFile = readFile;

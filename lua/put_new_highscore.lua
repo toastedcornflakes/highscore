@@ -2,8 +2,7 @@
 local best_saved = redis.call('get', KEYS[1]);
 
 -- and update it if new is better
-if not best_saved or best_saved < ARGV[1]
-    then
+if not best_saved or best_saved < ARGV[1] then
     redis.call('set', KEYS[1], ARGV[1])
 end
 -- set latest
