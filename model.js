@@ -20,58 +20,58 @@ function create_redis_key_prefix(game, player) {
 
 
 function PUT_handler(req, res) {
-    console.log('Received PUT request to url');
-    console.log(req.url);
-    
-    // splitting the url to get an array ['', game_name, play_name, score]
-    var path = req.url.split('/', 4);
-    
-    // check if input is sane
-    var error_message = '';
-    if (path.length < 4) {
-      error_message = 'Not enough parameters';
-    } else if (path[0] != '') {
-      error_message = 'Invalid request';
-    } else if (config.allowed_game_names.indexOf(path[1]) == -1) {
-      error_message = 'Inexistent game name';
-    } else if (!path[2].match(config.regex_allowed_player_names)) {
-      error_message = 'Invalid player name';
-    } else if (!path[3].match(/^[\d]+$/)) {
-      error_message = 'Score isn\'t integer';
+  console.log('Received PUT request to url');
+  console.log(req.url);
+  
+  // splitting the url to get an array ['', game_name, play_name, score]
+  var path = req.url.split('/', 4);
+  
+  // check if input is sane
+  var error_message = '';
+  if (path.length < 4) {
+    error_message = 'Not enough parameters';
+  } else if (path[0] != '') {
+    error_message = 'Invalid request';
+  } else if (config.allowed_game_names.indexOf(path[1]) == -1) {
+    error_message = 'Inexistent game name';
+  } else if (!path[2].match(config.regex_allowed_player_names)) {
+    error_message = 'Invalid player name';
+  } else if (!path[3].match(/^[\d]+$/)) {
+    error_message = 'Score isn\'t integer';
+  }
+  
+  if (error_message){
+    console.log('Error: ' + error_message);
+    res.writeHead(400);
+    res.end(error_message);
+    return;
+  } 
+  
+  var game = path[1];
+  var player = path[2];
+  // specify the radix to work around octal behavior of parseInt()
+  var score = parseInt(path[3], 10);
+  // saving to redis
+  var key_prefix = create_redis_key_prefix(game, player);
+  
+  // set latest, get best saved and replace it by new score if it's is better
+  // using redis eval and lua magic to make atomic operations
+  var lua_redis_update_script = "local best_saved = redis.call('get', KEYS[1]);" + // get the current best
+  "if not best_saved or best_saved < ARGV[1]" + // save new only if better
+  "then redis.call('set', KEYS[1], ARGV[1]) end;" +
+  "redis.call('set', KEYS[2], ARGV[1])"; // set latest anyway
+  
+  // args of eval(): [script, number of keys, key1, key2, arg to script]
+  redisClient.eval([lua_redis_update_script, 2, key_prefix + BEST, key_prefix + LATEST, score], 
+  function (err) {
+    if(err) {
+      console.log('Redis error: ' + err);
+      res.writeHead(500);
+    } else {
+      res.writeHead(201);
     }
-    
-    if (error_message){
-      console.log('Error: ' + error_message);
-      res.writeHead(400);
-      res.end(error_message);
-      return;
-    } 
-    
-    var game = path[1];
-    var player = path[2];
-    // specify the radix to work around octal behavior of parseInt()
-    var score = parseInt(path[3], 10);
-    // saving to redis
-    var key_prefix = create_redis_key_prefix(game, player);
-    
-    // set latest, get best saved and replace it by new score if it's is better
-    // using redis eval and lua magic to make atomic operations
-    var lua_redis_update_script = "local best_saved = redis.call('get', KEYS[1]);" + // get the current best
-    "if not best_saved or best_saved < ARGV[1]" + // save new only if better
-    "then redis.call('set', KEYS[1], ARGV[1]) end;" +
-    "redis.call('set', KEYS[2], ARGV[1])"; // set latest anyway
-    
-    // args of eval(): [script, number of keys, key1, key2, arg to script]
-    redisClient.eval([lua_redis_update_script, 2, key_prefix + BEST, key_prefix + LATEST, score], 
-    function (err) {
-      if(err) {
-        console.log('Redis error: ' + err);
-        res.writeHead(500);
-      } else {
-        res.writeHead(201);
-      }
-      res.end();
-    });
+    res.end();
+  });
 }
 
 function GET_handler(req, res) {
