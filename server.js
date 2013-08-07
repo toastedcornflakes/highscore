@@ -1,9 +1,9 @@
 'use strict';
 
 var http = require('http');
-var model = require('./model.js')
+var model = require('./model.js');
+var config = require('./config');
 
-var port = 8888;
 
 function router(req, res) {
   // default handler is method not allowed
@@ -24,5 +24,5 @@ function router(req, res) {
   handler(req, res);
 }
 
-http.createServer(router).listen(port);
-console.log('Server running at http://127.0.0.1:' + port);
+http.createServer(router).listen(config.server_port);
+console.log('Server running at http://127.0.0.1:' + config.server_port);
