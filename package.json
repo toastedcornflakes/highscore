@@ -1,9 +1,15 @@
 {
-    "name" : "highscore", 
-    "description" : "A RESTful highscore server.",
-    "keywords" : ["RESTful", "highscore"],
-    "version" : "0.0.1",
-    "author" : {
-        "name" : "Louis"
-    }
+  "name": "highscore",
+  "description": "A RESTful highscore server.",
+  "keywords": [
+    "RESTful",
+    "highscore"
+  ],
+  "version": "0.0.1",
+  "author": {
+    "name": "Louis"
+  },
+  "dependencies": {
+    "redis": "~0.8.4"
+  }
 }
