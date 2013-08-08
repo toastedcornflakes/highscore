@@ -5,6 +5,7 @@ var fileCache = require('./model/filecache.js')
 var redis = require('redis');
 var redisClient = redis.createClient();
 
+var BEST_EVER = '_worldwide_best';
 var BEST = 'best';
 var LATEST= 'latest';
 
@@ -20,9 +21,24 @@ function create_redis_key_prefix(game, player) {
 }
 
 
+// save to redis
+function save_new_score(game, player, score, save_callback) {  
+  // set latest, get best saved and replace it by new score if it's is better
+  // using redis eval and lua magic to make atomic operations
+  fileCache.readFile('lua/put_new_highscore.lua', function(file){
+    var lua_redis_update_script = file;
+    var key_worldwide = ['score', game, BEST_EVER].join('::');
+    var key_prefix = create_redis_key_prefix(game, player);
+    var key_best = key_prefix + BEST;
+    var key_latest = key_prefix + LATEST;
+
+    // invoke redis with lua script
+    redisClient.eval([lua_redis_update_script, 3, key_best, key_latest, key_worldwide, score], save_callback);
+  });
+}
+
 function PUT_handler(req, res) {
-  console.log('Received PUT request to url');
-  console.log(req.url);
+  console.log('Receiving PUT request to ' + req.url);
   
   // splitting the url to get an array ['', game_name, play_name, score]
   var path = req.url.split('/', 4);
@@ -52,31 +68,18 @@ function PUT_handler(req, res) {
   var player = path[2];
   // specify the radix to work around octal behavior of parseInt()
   var score = parseInt(path[3], 10);
-  // saving to redis
-  var key_prefix = create_redis_key_prefix(game, player);
-  
-  // set latest, get best saved and replace it by new score if it's is better
-  // using redis eval and lua magic to make atomic operations
-  fileCache.readFile('lua/put_new_highscore.lua', function(err, file){
+  save_new_score(game, player, score, function (err) {
+    console.log('Saved to redis');
     if(err) {
-      console.log('Required file not found, aborting...');
-      console.log(__dirname + 'model/redis_put.lua');
-      process.exit(-1);
+      console.log('Redis error: ' + err);
+      res.writeHead(500);
+    } else {
+      res.writeHead(201);
     }
-    var lua_redis_update_script = file;
-    // args of eval(): [script, number of keys, key1, key2..., arg to script]
-    redisClient.eval([lua_redis_update_script, 2, key_prefix + BEST, key_prefix + LATEST, score], 
-    function (err) {
-      if(err) {
-        console.log('Redis error: ' + err);
-        res.writeHead(500);
-      } else {
-        res.writeHead(201);
-      }
-      res.end();
-    });
+    res.end();
   });
 }
+
 
 function GET_handler(req, res) {
   console.log('Received GET request to url');
@@ -107,7 +110,9 @@ function GET_handler(req, res) {
   var game = path[1];
   var player = path[2];
   var verb = path[3] === BEST ? BEST : LATEST;
-  redisClient.get(create_redis_key_prefix(game, player) + verb, function(err, reply) {
+  var key = create_redis_key_prefix(game, player) + verb;
+
+  redisClient.get(key, function(err, reply) {
     if (err || isNaN(reply)) {
       res.writeHead(500);
       res.end('Internal server error');

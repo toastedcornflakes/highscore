@@ -4,10 +4,10 @@ Example request to get the best score of player bob who is playing pokemon
     GET /pokemon/bob/best
 
 Get the latest score of bob:
-    GET /pokemon/bob/latest
+    GET /pokemon/player/bob/latest
 
-Get the 5 best score ever
-    GET /pokemon/worldwide/5
+Get the best score ever
+    GET /pokemon/worldwide
 
 Set a new score (of 1337 points) of bob playing pokemon
     PUT /pokemon/bob/1337
