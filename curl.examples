@@ -1,0 +1,4 @@
+Add a new score
+curl -i -H "Accept: application/json" -X PUT http://127.0.0.1:8888/zelda/bob/1337
+Get the best of all on game zelda for bob
+curl -i -H "Accept: application/json" -X GET http://127.0.0.1:8888/zelda/bob/best
