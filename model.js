@@ -1,13 +1,13 @@
 'use strict';
 
 var config = require('./config.js');
-var fileCache = require('./model/filecache.js')
+var fileCache = require('./model/filecache.js');
 var redis = require('redis');
 var redisClient = redis.createClient();
 
 var BEST_EVER = '_worldwide_best';
 var BEST = 'best';
-var LATEST= 'latest';
+var LATEST = 'latest';
 
 
 redisClient.on('error', function (err) {
@@ -16,13 +16,13 @@ redisClient.on('error', function (err) {
 
 
 // save to redis
-function save_new_score(game, player, score, save_callback) {  
+function save_new_score(game, player, score, save_callback) { 
   // set latest, get best saved and replace it by new score if it's is better
   // using redis eval and lua magic to make atomic operations
   fileCache.readFile('lua/put_new_highscore.lua', function(file){
     var lua_redis_update_script = file;
     var key_worldwide = ['score', game, BEST_EVER].join('::');
-    var key_prefix = create_redis_key_prefix(game, player);
+    var key_prefix = ['score', game, player, ''].join('::');
     var key_best = key_prefix + BEST;
     var key_latest = key_prefix + LATEST;
 
@@ -41,7 +41,7 @@ function PUT_handler(req, res) {
   var error_message = '';
   if (path.length < 4) {
     error_message = 'Not enough parameters';
-  } else if (path[0] != '') {
+  } else if (path[0] !=='') {
     error_message = 'Invalid request';
   } else if (config.allowed_game_names.indexOf(path[1]) == -1) {
     error_message = 'Inexistent game name';
@@ -51,12 +51,12 @@ function PUT_handler(req, res) {
     error_message = 'Score isn\'t integer';
   }
   
-  if (error_message){
+  if (error_message) {
     console.log('Error: ' + error_message);
     res.writeHead(400);
     res.end(error_message);
     return;
-  } 
+  }
   
   var game = path[1];
   var player = path[2];
@@ -92,7 +92,7 @@ function servePlayerScore(res, game, player, verb) {
       res.writeHead(200);
       res.end(reply);
     } else {
-      res.writeHead(404)
+      res.writeHead(404);
       res.end('Player not found');
     }
   });
@@ -109,7 +109,7 @@ function serveWorldwideBest(res, game) {
       res.writeHead(200);
       res.end(reply);
     } else {
-      res.writeHead(404)
+      res.writeHead(404);
       res.end('Score not found');
     }
   });
@@ -117,12 +117,12 @@ function serveWorldwideBest(res, game) {
 
 
 String.prototype.removeTrailing = function(what) {
-  if(this.slice(-what.length) === what) {
+  if (this.slice(-what.length) === what) {
     return this.slice(0, -what.length);
   } else {
     return this;
   }
-}
+};
 
 
 function GET_handler(req, res) {
@@ -139,7 +139,7 @@ function GET_handler(req, res) {
   var error_message = '';
   if (path.length == 4 || path.length == 3) {
     // common checks
-    if (path[0] != '') {
+    if (path[0] !=='') {
       return presentError(res, 'Invalid request');
     }
     if (config.allowed_game_names.indexOf(path[1]) == -1) {
@@ -150,8 +150,6 @@ function GET_handler(req, res) {
       if(path[2] === 'worldwide') {
         return serveWorldwideBest(res, path[1]);
       }
-      
-      
     } else {
       // checks for single player
       if (!path[2].match(config.regex_allowed_player_names)) {
