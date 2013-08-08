@@ -1,4 +1,4 @@
-A RESTful highscore server
+An http highscore server
 
 Example request to get the best score of player bob who is playing pokemon
     GET /pokemon/bob/best
@@ -6,7 +6,7 @@ Example request to get the best score of player bob who is playing pokemon
 Get the latest score of bob:
     GET /pokemon/player/bob/latest
 
-Get the best score ever
+Get the best score ever for pokemon
     GET /pokemon/worldwide
 
 Set a new score (of 1337 points) of bob playing pokemon
