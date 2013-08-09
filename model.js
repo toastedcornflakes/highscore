@@ -45,7 +45,7 @@ function PUT_handler(req, res) {
     error_message = 'Invalid request';
   } else if (config.allowed_game_names.indexOf(path[1]) == -1) {
     error_message = 'Inexistent game name';
-  } else if (!path[2].match(config.regex_allowed_player_names)) {
+  } else if (!path[2].match(config.allowed_player_names)) {
     error_message = 'Invalid player name';
   } else if (!path[3].match(/^[\d]+$/)) {
     error_message = 'Score isn\'t integer';

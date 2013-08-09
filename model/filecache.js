@@ -7,10 +7,14 @@
  */
 
 var fs = require('fs');
+var _ = require('underscore');
 
 var cache = {};
 
 function readFile(path, callback) {
+  if(!_.isString(path)) {
+    return;
+  }
   if(cache.path) {
     return callback(cache.path);
   } else {
