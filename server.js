@@ -6,6 +6,7 @@ var config = require('./config.js');
 
 
 function router(req, res) {
+  res.setHeader('X-Powered-By', 'A fucking redhead');
   // default handler is method not allowed
   var handler = function() {
     res.writeHead(405, {'Allow': 'GET, PUT'});
