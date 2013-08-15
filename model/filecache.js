@@ -18,7 +18,7 @@ function readFile(path, callback) {
   if(cache.path) {
     return callback(cache.path);
   } else {
-    console.log("Cache not hit for " + path + ", loading from disk");
+    console.log('Cache not hit for ' + path + ', loading from disk');
     fs.readFile(path, function(err, file) {
       if(err) {
         console.log('Required file not found, aborting...');

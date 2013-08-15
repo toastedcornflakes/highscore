@@ -13,14 +13,14 @@ function router(req, res) {
     res.end();
   };
   switch(req.method) {
-    case 'PUT':
-      handler = model.putHandler;
-      break;
-    case 'GET':
-      handler = model.getHandler;
-      break;
-    default:
-      console.log('Invalid http request');
+  case 'PUT':
+    handler = model.putHandler;
+    break;
+  case 'GET':
+    handler = model.getHandler;
+    break;
+  default:
+    console.log('Invalid http request');
   }
   handler(req, res);
 }
