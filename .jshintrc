@@ -7,5 +7,6 @@
   "onecase": true,
   "indent": 2,
   "noempty": true,
-  "quotmark": "single"
+  "quotmark": "single",
+  "evil": true
 }

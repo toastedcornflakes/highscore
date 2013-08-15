@@ -1,28 +1,32 @@
 {
-    "author": {
-        "name": "gg"
-    }, 
-    "dependencies": {
-        "redis": "~0.8.4", 
-        "underscore": "~1.5.1"
-    }, 
-    "description": "An HTTP highscore server.", 
-    "devDependencies": {
-        "mocha": "~1.12.0", 
-        "should": "~1.2.2", 
-        "superagent": "~0.15.4"
-    }, 
-    "engines": {
-        "node": "0.8.* || 0.10.*"
-    }, 
-    "keywords": [
-        "highscore", 
-        "server"
-    ], 
-    "name": "highscore", 
-    "scripts": {
-        "start": "node server.js", 
-        "test": "mocha"
-    }, 
-    "version": "0.0.2"
+  "author": {
+    "name": "gg"
+  },
+  "dependencies": {
+    "redis": "~0.8.4",
+    "underscore": "~1.5.1"
+  },
+  "description": "An HTTP highscore server.",
+  "devDependencies": {
+    "mocha": "~1.12.0",
+    "should": "~1.2.2",
+    "superagent": "~0.15.4",
+    "jshint": "~2.1.9",
+    "grunt": "~0.4.1",
+    "grunt-contrib-jshint": "~0.6.2",
+    "grunt-mocha-test": "~0.6.3"
+  },
+  "engines": {
+    "node": "0.8.* || 0.10.*"
+  },
+  "keywords": [
+    "highscore",
+    "server"
+  ],
+  "name": "highscore",
+  "scripts": {
+    "start": "node server.js",
+    "test": "mocha"
+  },
+  "version": "0.0.2"
 }
