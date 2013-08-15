@@ -17,6 +17,6 @@ module.exports = function(grunt) {
   });
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-mocha-test');
-  // default task launched by 'grunt' on the cmd
+
   grunt.registerTask('default', ['jshint', 'mochaTest']);
 };
