@@ -1,0 +1,11 @@
+{
+  "node": true,
+  "boss": false,
+  "newcap": false,
+  "undef": true,
+  "unused": true,
+  "onecase": true,
+  "indent": 2,
+  "noempty": true,
+  "quotmark": "single"
+}

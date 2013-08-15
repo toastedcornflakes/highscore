@@ -136,7 +136,6 @@ function GET_handler(req, res) {
    * or
    * /game/player/[best|latest]
    */
-  var error_message = '';
   if (path.length == 4 || path.length == 3) {
     // common checks
     if (path[0] !=='') {
