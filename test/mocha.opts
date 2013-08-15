@@ -1,0 +1,4 @@
+--require should
+--require superagent
+
+--reporter spec
