@@ -2,8 +2,6 @@
 
 var http = require('http');
 var model = require('./model.js');
-var config = require('./config.js');
-
 
 function router(req, res) {
   res.setHeader('X-Powered-By', 'A fucking redhead');
@@ -25,5 +23,7 @@ function router(req, res) {
   handler(req, res);
 }
 
-http.createServer(router).listen(config.server_port);
-console.log('Server running at http://127.0.0.1:' + config.server_port);
+module.exports.start = function startHttpServer(port) {
+  http.createServer(router).listen(port);
+  console.log('Server running at http://127.0.0.1:' + port);
+};

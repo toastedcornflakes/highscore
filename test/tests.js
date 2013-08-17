@@ -1,10 +1,10 @@
-var host = '127.0.0.1:8888';
+var host = '127.0.0.1:1234';
 function request(url) {
   return require('superagent')(host+url);
 }
 
 var should = require('should');
-require('../server'); // < this will launch the app
+require('../server').start(1234); // < this will launch the app
 
 // override some config data
 require('../config').allowed_game_names = ['pokemon'];
