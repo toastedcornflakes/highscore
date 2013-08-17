@@ -38,24 +38,16 @@ function PUT_handler(req, res) {
   var path = req.url.split('/', 4);
   
   // check if input is sane
-  var error_message = '';
   if (path.length < 4) {
-    error_message = 'Not enough parameters';
+    return presentError(res, 'Not enough parameters');
   } else if (path[0] !=='') {
-    error_message = 'Invalid request';
+    return presentError(res, 'Invalid request');
   } else if (config.allowed_game_names.indexOf(path[1]) == -1) {
-    error_message = 'Inexistent game name';
+    return presentError(res, 'Inexistent game name');
   } else if (!path[2].match(config.allowed_player_names)) {
-    error_message = 'Invalid player name';
+    return presentError(res, 'Invalid player name');
   } else if (!path[3].match(/^[\d]+$/)) {
-    error_message = 'Score isn\'t integer';
-  }
-  
-  if (error_message) {
-    console.log('Error: ' + error_message);
-    res.writeHead(400);
-    res.end(error_message);
-    return;
+    return presentError(res, 'Score isn\'t integer');
   }
   
   var game = path[1];
@@ -75,9 +67,9 @@ function PUT_handler(req, res) {
 }
 
 
-function presentError(res, error_message) {
+function presentError(res, error_message, code) {
   console.log('Error: ' + error_message);
-  res.writeHead(400);
+  res.writeHead(code || 400);
   res.end(error_message);
 }
 
