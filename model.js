@@ -68,7 +68,6 @@ function PUT_handler(req, res) {
 
 
 function presentError(res, error_message, code) {
-  console.log('Error: ' + error_message);
   res.writeHead(code || 400);
   res.end(error_message);
 }
