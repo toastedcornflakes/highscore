@@ -18,18 +18,17 @@ function readFile(path, callback) {
   if(cache.path) {
     return callback(cache.path);
   } else {
-    console.log('Cache not hit for ' + path + ', loading from disk');
+    //console.log('Cache not hit for ' + path + ', loading from disk');
     fs.readFile(path, function(err, file) {
       if(err) {
         console.log('Required file not found, aborting...');
-        console.log(path);
         process.exit(-1);
       }
       cache.path = file;
       callback(file);
     });
     
-    console.log('Adding ' + path + ' to watch for changes and invalidate the cache when needed');
+    //console.log('Adding ' + path + ' to watch for changes and invalidate the cache when needed');
     fs.watch(path, {persistent: false}, function(event, filename) {
       // since filename is null on OS X, invalidate the whole cache
       // instead of just the file
