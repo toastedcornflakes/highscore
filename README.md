@@ -29,7 +29,3 @@ Install [redis](http://redis.io/) and start it with `redis-server`
 To run the tests
     
     npm test
-
-TODO
-----
-- [ ] Cover writing in tests

@@ -39,7 +39,7 @@ function presentError(res, errorMessage, code) {
 
 
 function PutHandler(req, res) {
-  console.log('Receiving PUT request to ' + req.url);
+  console.log('Receiving PUT request to', req.url);
   
   // splitting the url to get an array ['', game_name, play_name, score]
   var path = req.url.split('/', 4);
@@ -47,7 +47,7 @@ function PutHandler(req, res) {
   // check if input is sane
   if (path.length < 4) {
     return presentError(res, 'Not enough parameters');
-  } else if (path[0] !=='') {
+  } else if (path[0] !== '') {
     return presentError(res, 'Invalid request');
   } else if (config.allowedGameNames.indexOf(path[1]) === -1) {
     return presentError(res, 'Inexistent game name');
@@ -83,6 +83,7 @@ function servePlayerScore(res, game, player, verb) {
       res.end('Internal server error');
     } else if (reply) {
       res.writeHead(200);
+      console.log('GET: redis replied with', reply);
       res.end(reply);
     } else {
       res.writeHead(404);
