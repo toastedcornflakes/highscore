@@ -1,3 +1,6 @@
+'use strict';
+/* global it, describe */
+
 var host = '127.0.0.1:1234';
 function request(url) {
   return require('superagent')(host+url);
@@ -7,7 +10,7 @@ var should = require('should');
 require('../server').start(1234); // < this will launch the app
 
 // override some config data
-require('../config').allowed_game_names = ['pokemon'];
+require('../config').allowedGameNames = ['pokemon'];
 
 describe('GET various invalid combinations', function() {
   describe('Unset player', function() {
@@ -15,7 +18,7 @@ describe('GET various invalid combinations', function() {
       request('/pokemon/alphonse/best')
       .end(function(err, res){
         should.not.exist(err);
-        res.should.have.status(404);      
+        res.should.have.status(404);
         done();
       });
     });

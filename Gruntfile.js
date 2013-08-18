@@ -1,9 +1,11 @@
+'use strict';
+
 module.exports = function(grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     jshint: {
       // define the files to lint
-      files: ['gruntfile.js', 'server.js', 'model.js', 'model/**.js', 'tests/*.js'],
+      files: ['Gruntfile.js', 'app.js', 'server.js', 'config.js', 'model.js', 'model/*.js', 'test/*.js'],
       options: grunt.file.readJSON('.jshintrc')
     },
     mochaTest: {

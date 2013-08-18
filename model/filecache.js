@@ -33,7 +33,7 @@ function readFile(path, callback) {
       // since filename is null on OS X, invalidate the whole cache
       // instead of just the file
       if(filename) {
-        console.log('Invalidating ' + filename);  
+        console.log('Invalidating ' + filename);
         delete cache.filename;
       } else {
         console.log('Invalidating the whole cache');

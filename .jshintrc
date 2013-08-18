@@ -1,12 +1,21 @@
 {
-  "node": true,
-  "boss": false,
-  "newcap": false,
-  "undef": true,
-  "unused": true,
-  "onecase": true,
+  "bitwise": true,
+  "camelcase": true,
+  "curly": true,
+  "eqeqeq": true,
+  "evil": true,
   "indent": 2,
+  "latedef": true,
+  "newcap": false,
+  "noarg": true,
+  "node": true,
   "noempty": true,
+  "noempty": true,
+  "nonew": true,
+  "onecase": true,
   "quotmark": "single",
-  "evil": true
+  "strict": true,
+  "trailing": true,
+  "undef": true,
+  "unused": true
 }
