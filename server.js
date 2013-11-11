@@ -18,7 +18,7 @@ function router(req, res) {
     handler = model.getHandler;
     break;
   default:
-    console.log('Invalid http request');
+    res.end('Invalid http request');
   }
   handler(req, res);
 }
