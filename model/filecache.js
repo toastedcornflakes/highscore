@@ -16,7 +16,9 @@ function readFile(path, callback) {
     return;
   }
   if(cache.path) {
-    return callback(cache.path);
+    return process.nextTick(function () {
+      callback(cache.path);
+    });
   } else {
     //console.log('Cache not hit for ' + path + ', loading from disk');
     fs.readFile(path, function(err, file) {
