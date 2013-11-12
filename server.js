@@ -17,8 +17,6 @@ function router(req, res) {
   case 'GET':
     handler = model.getHandler;
     break;
-  default:
-    res.end('Invalid http request');
   }
   handler(req, res);
 }
