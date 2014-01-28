@@ -146,15 +146,16 @@ describe('PUT requests', function(){
   });
 });
 
-describe.skip('GET previously set data', function() {
+describe('GET previously set data', function() {
+  //this.timeout(5000);
   describe('worldwide best should be alice\'s score', function() {
     it('should return 8888', function(done) {
       request
       .get(host + '/pokemon/alice/best')
-      .end(function(err, res){
-        should.not.exist(err);
+      .end(function(res){
+//        should.not.exist(err);
         res.should.have.status(200);
-        console.log('alice res', res);
+        console.log('alice res', res.text);
         done();
       });
     });

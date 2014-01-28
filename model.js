@@ -11,7 +11,8 @@ var LATEST = 'latest';
 
 
 redisClient.on('error', function (err) {
-  console.log('Error ' + err);
+  console.log('Redis error',  err, 'aborting.');
+  process.exit(-1);
 });
 
 
@@ -84,7 +85,7 @@ function servePlayerScore(res, game, player, verb) {
     } else if (reply) {
       res.writeHead(200);
       console.log('GET: redis replied with', reply);
-      res.end(reply);
+      res.end('score::' + reply);
     } else {
       res.writeHead(404);
       res.end('Player not found');
@@ -111,17 +112,16 @@ function serveWorldwideBest(res, game) {
 
 
 String.prototype.removeTrailing = function(what) {
-  if (this.slice(-what.length) === what) {
-    return this.slice(0, -what.length);
-  } else {
+  if (this.slice(-what.length) !== what) {
     return this;
   }
+  return this.slice(0, -what.length);
 };
 
 
 function GetHandler(req, res) {
   console.log('Received GET request to url');
-  console.log(req.url);
+  console.log('Received GET: %s', req.url);
   var path = req.url.removeTrailing('/').split('/', 4);
 
   /**

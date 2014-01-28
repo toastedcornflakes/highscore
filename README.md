@@ -29,3 +29,8 @@ Install [redis](http://redis.io/) and start it with `redis-server`
 To run the tests
     
     npm test
+
+Todo
+------
+Integrate [debug module](https://github.com/visionmedia/debug)
+Log with colors (: https://npmjs.org/package/colors
