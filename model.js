@@ -27,7 +27,7 @@ function saveNewScore(game, player, score, saveCallback) {
     var keyBest = keyPrefix + BEST;
     var keyLatest = keyPrefix + LATEST;
 
-    // invoke redis with lua script
+    // invoke redis with lua script for atomicity
     redisClient.eval([redisUpdateScript, 3, keyBest, keyLatest, keyWorldwide, score], saveCallback);
   });
 }
@@ -39,7 +39,7 @@ function presentError(res, errorMessage, code) {
 }
 
 
-function PutHandler(req, res) {
+function putHandler(req, res) {
   console.log('Receiving PUT request to', req.url);
   
   // splitting the url to get an array ['', game_name, play_name, score]
@@ -119,7 +119,7 @@ String.prototype.removeTrailing = function(what) {
 };
 
 
-function GetHandler(req, res) {
+function getHandler(req, res) {
   console.log('Received GET request to url');
   console.log('Received GET: %s', req.url);
   var path = req.url.removeTrailing('/').split('/', 4);
@@ -160,5 +160,5 @@ function GetHandler(req, res) {
 }
 
 
-exports.putHandler = PutHandler;
-exports.getHandler = GetHandler;
+exports.putHandler = putHandler;
+exports.getHandler = getHandler;
